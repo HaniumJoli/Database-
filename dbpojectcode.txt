@@ -1,0 +1,324 @@
+Creation part::::
+
+CREATE TABLE Patient (
+    PatientID NUMBER PRIMARY KEY,
+    FirstName VARCHAR2(50),
+    LastName VARCHAR2(50),
+    Gender VARCHAR2(10),
+    DateOfBirth DATE,
+    Address VARCHAR2(100)
+);
+
+CREATE TABLE Meditation (
+    MeditationID NUMBER PRIMARY KEY,
+    MeditationName VARCHAR2(100),
+    Dosage VARCHAR2(50),
+    Frequency VARCHAR2(50),
+    PatientID NUMBER,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+CREATE TABLE DoctorAppointment (
+    AppointmentID NUMBER PRIMARY KEY,
+    AppoinDateTime TIMESTAMP,
+    DoctorName VARCHAR2(100),
+    AppoinReason VARCHAR2(200),
+    PatientID NUMBER,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+CREATE TABLE TestResult (
+    TestResultID NUMBER PRIMARY KEY,
+    TestName VARCHAR2(100),
+    Result VARCHAR2(200),
+    TestDate DATE,
+    PatientID NUMBER,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+values insertion in each table:::
+
+
+
+
+PATIENT table insert///
+INSERT INTO Patient (PatientID, FirstName, LastName, Gender, DateOfBirth, Address)
+VALUES (1, 'Abu', 'Ahmed', 'Male', TO_DATE('1990-05-15', 'YYYY-MM-DD'),' Dhaka');
+INSERT INTO Patient (PatientID, FirstName, LastName, Gender, DateOfBirth, Address)
+VALUES (2, 'Mehrab', 'Hasan', 'Male', TO_DATE('1985-09-20', 'YYYY-MM-DD'), 'Chittagong');
+INSERT INTO Patient (PatientID, FirstName, LastName, Gender, DateOfBirth, Address)
+VALUES (3, 'Tasnim', 'Akhtar', 'Female', TO_DATE('1995-03-10', 'YYYY-MM-DD'), 'Rajshahi');
+INSERT INTO Patient (PatientID, FirstName, LastName, Gender, DateOfBirth, Address)
+VALUES (4, 'Sabir', 'Islam', 'Male', TO_DATE('1982-11-25', 'YYYY-MM-DD'), 'Khulna');
+
+
+
+
+MEDITATION table insert//
+INSERT INTO Meditation (MeditationID, MeditationName, Dosage, Frequency, PatientID)
+VALUES (101, 'Paracetamol', '1 tablet', 'Once daily', 1);
+   INSERT INTO Meditation (MeditationID, MeditationName, Dosage, Frequency, PatientID)
+VALUES  (102, 'Amoxicillin', '2 tablets', 'Three times daily', 2);
+    INSERT INTO Meditation (MeditationID, MeditationName, Dosage, Frequency, PatientID)
+VALUES (103, 'Paracetamol', '1 tablet', 'Once daily', 3);
+    INSERT INTO Meditation (MeditationID, MeditationName, Dosage, Frequency, PatientID)
+VALUES (104, 'Acidomax', '1 tablet', 'Twice daily', 4);
+
+
+
+
+DOCTORAPPOINTMENT table insert//
+INSERT INTO DoctorAppointment (AppointmentID, AppoinDateTime, DoctorName, AppoinReason, PatientID)
+VALUES (201, TO_DATE('2024-04-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Dr. Ali', 'Initial examination', 1);
+
+INSERT INTO DoctorAppointment (AppointmentID, AppoinDateTime, DoctorName, AppoinReason, PatientID)
+VALUES (202, TO_DATE('2024-05-02 14:30:00', 'YYYY-MM-DD HH24:MI:SS'), 'Dr. Khan', 'Prescription pickup', 2);
+
+INSERT INTO DoctorAppointment (AppointmentID, AppoinDateTime, DoctorName, AppoinReason, PatientID)
+VALUES (203, TO_DATE('2024-05-05 11:15:00', 'YYYY-MM-DD HH24:MI:SS'), 'Dr. Rahim', 'Test results', 3);
+
+INSERT INTO DoctorAppointment (AppointmentID, AppoinDateTime, DoctorName, AppoinReason, PatientID)
+VALUES (204, TO_DATE('2024-05-07 09:45:00', 'YYYY-MM-DD HH24:MI:SS'), 'Dr. Kabir', 'Health consultation', 4);
+
+
+
+TESTRESULT table insert//
+INSERT INTO TestResult (TestResultID, TestName, Result, TestDate, PatientID)
+VALUES (301, 'Blood Test', 'Normal', TO_DATE('2024-04-25', 'YYYY-MM-DD'), 1);
+
+INSERT INTO TestResult (TestResultID, TestName, Result, TestDate, PatientID)
+VALUES (302, 'Blood Sugar Test', 'High', TO_DATE('2024-04-30', 'YYYY-MM-DD'), 2);
+
+INSERT INTO TestResult (TestResultID, TestName, Result, TestDate, PatientID)
+VALUES (303, 'Echocardiogram', 'Normal', TO_DATE('2024-04-28', 'YYYY-MM-DD'), 3);
+
+INSERT INTO TestResult (TestResultID, TestName, Result, TestDate, PatientID)
+VALUES (304, 'Blood Pressure Measurement', 'Normal', TO_DATE('2024-04-29', 'YYYY-MM-DD'), 4);
+
+
+
+**select command
+    select *from Patient where gender='Female';
+**update command
+    update  TestResult set Result='High' where PatientID=1;
+**showing table
+   SELECT * FROM TestResult;
+**showing current user_name
+   show user
+**Union, intersect, and except
+   select FirstName from Patient where FirstName like 'T%' union select FirstName from 
+   Patient where FirstName like 'S%';
+**counting rows
+  select count(*) from Patient;
+  select count(*) from TestResult;
+  select count(PatientID) as number_of_patient from Patient;
+  select count(distinct MeditationName) as number_of_medicine from Meditation;
+**Group by example
+  SELECT MeditationName, COUNT(*) AS Total_Count, MAX(Dosage) AS Max_Dosage, MIN(Dosage) AS Min_Dosage, AVG(PatientID) AS Avg_PatientID FROM Meditation GROUP BY MeditationName;
+   ->COUNT(*) counts the total number of rows for each unique MeditationName.
+   ->MAX(Dosage) and MIN(Dosage) retrieve the maximum and minimum dosage, respectively, for each unique MeditationName.
+   ->AVG(PatientID) calculates the average of PatientID for each unique MeditationName.
+**having clause example
+  SELECT MeditationName, COUNT(*) AS Total_Count FROM Meditation GROUP BY MeditationName HAVING COUNT(*) > 1;
+   ->The GROUP BY clause groups the rows by MeditationName.
+   ->The COUNT(*) function calculates the total count of rows for each MeditationName group.
+   ->The HAVING clause filters the results and retains only those groups where the count is greater than 1.
+**natural join
+   SELECT *FROM Patient NATURAL JOIN Meditation WHERE PatientID = 3;
+   select * from Patient natural join Meditation;
+**PL/SQL variable declaration and print value
+   SET SERVEROUTPUT ON;
+
+   DECLARE 
+    patient_id Patient.PatientID%TYPE;
+    first_name Patient.FirstName%TYPE;
+    last_name Patient.LastName%TYPE;
+    gender Patient.Gender%TYPE;
+    date_of_birth Patient.DateOfBirth%TYPE;
+    address Patient.Address%TYPE;
+   BEGIN
+    SELECT PatientID, FirstName, LastName, Gender, DateOfBirth, Address
+    INTO patient_id, first_name, last_name, gender, date_of_birth, address
+    FROM Patient
+    WHERE PatientID = 3;
+
+    DBMS_OUTPUT.PUT_LINE('PatientID: ' || patient_id || ', FirstName: ' || first_name || ', LastName: ' || last_name || ', Gender: ' || gender || ', DateOfBirth: ' || date_of_birth || ', Address: ' || address);
+   END;
+   /
+**Insert and set default value
+  SET SERVEROUTPUT ON;
+
+   DECLARE 
+    meditation_id Meditation.MeditationID%TYPE := 105;
+    meditation_name Meditation.MeditationName%TYPE := 'Ibuprofen';
+    dosage Meditation.Dosage%TYPE := '1 tablet';
+    frequency Meditation.Frequency%TYPE := 'Twice daily';
+    patient_id Meditation.PatientID%TYPE := 4; -- Assuming patient ID 4 exists in the Patient table
+   BEGIN
+    INSERT INTO Meditation (MeditationID, MeditationName, Dosage, Frequency, PatientID)
+    VALUES (meditation_id, meditation_name, dosage, frequency, patient_id);
+   END;
+   /
+**showing insertion info
+  SELECT *
+  FROM Meditation
+  WHERE MeditationID = 105;
+**Row type using
+  SET SERVEROUTPUT ON;
+
+  DECLARE 
+    test_result_row TestResult%ROWTYPE;
+  BEGIN
+    SELECT * INTO test_result_row
+    FROM TestResult
+    WHERE TestResultID = 303;
+
+    DBMS_OUTPUT.PUT_LINE('TestResultID: ' || test_result_row.TestResultID || ', TestName: ' || test_result_row.TestName || ', Result: ' || test_result_row.Result || ', TestDate: ' || test_result_row.TestDate || ', PatientID: ' || test_result_row.PatientID);
+  END;
+  /
+**cursor and row count
+  SET SERVEROUTPUT ON;
+
+  DECLARE 
+    CURSOR test_result_cursor IS SELECT * FROM TestResult;
+    test_result_row TestResult%ROWTYPE;
+  BEGIN
+    OPEN test_result_cursor;
+    LOOP
+        FETCH test_result_cursor INTO test_result_row;
+        EXIT WHEN test_result_cursor%NOTFOUND;
+        
+        DBMS_OUTPUT.PUT_LINE('TestResultID: ' || test_result_row.TestResultID || ', TestName: ' || test_result_row.TestName || ', Result: ' || test_result_row.Result || ', TestDate: ' || test_result_row.TestDate || ', PatientID: ' || test_result_row.PatientID);
+        DBMS_OUTPUT.PUT_LINE('Row count: ' || test_result_cursor%ROWCOUNT);
+    END LOOP;
+    CLOSE test_result_cursor;
+   END;
+   /
+**FOR LOOP/WHILE LOOP/ARRAY with extend() function
+  SET SERVEROUTPUT ON;
+
+  DECLARE 
+    counter NUMBER;
+    meditation_name Meditation.MeditationName%TYPE;
+    TYPE NAMEARRAY IS VARRAY(5) OF Meditation.MeditationName%TYPE; 
+    A_NAME NAMEARRAY := NAMEARRAY();
+  BEGIN
+    counter := 1;
+    FOR x IN 101..105 LOOP
+        BEGIN
+            SELECT MeditationName INTO meditation_name FROM Meditation WHERE MeditationID = x;
+            A_NAME.EXTEND();
+            A_NAME(counter) := meditation_name;
+            counter := counter + 1;
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                DBMS_OUTPUT.PUT_LINE('No data found for MeditationID: ' || x);
+        END;
+    END LOOP;
+    
+    counter := 1;
+    WHILE counter <= A_NAME.COUNT LOOP
+        DBMS_OUTPUT.PUT_LINE(A_NAME(counter)); 
+        counter := counter + 1;
+    END LOOP;
+   END;
+   /
+**IF /ELSEIF /ELSE example
+ DECLARE 
+   counter NUMBER := 1;
+   meditation_name Meditation.MeditationName%TYPE;
+   TYPE NAMEARRAY IS VARRAY(5) OF Meditation.MeditationName%TYPE;
+   A_NAME NAMEARRAY := NAMEARRAY('Meditation 1', 'Meditation 2', 'Meditation 3', 'Meditation 4', 'Meditation 5'); 
+   -- VARRAY with a fixed size of 5 elements and initialized with meditation names
+  BEGIN
+   counter := 1;
+   FOR x IN 101..105  -- Assuming MeditationIDs 101 to 105 exist in the table
+   LOOP
+      SELECT MeditationName INTO meditation_name FROM Meditation WHERE MeditationID = x;
+      IF meditation_name = 'Meditation 1' THEN
+         DBMS_OUTPUT.PUT_LINE(meditation_name || ' is for relaxing');
+      ELSIF meditation_name = 'Meditation 2' THEN
+         DBMS_OUTPUT.PUT_LINE(meditation_name || ' is for stress relief');
+      ELSE
+         DBMS_OUTPUT.PUT_LINE(meditation_name || ' is for general wellness');
+      END IF;
+   END LOOP;
+  END;
+  /
+**procedure example
+ CREATE OR REPLACE PROCEDURE proc2(
+  var1 IN NUMBER,
+  var2 OUT VARCHAR2,
+  var3 IN OUT NUMBER
+  )
+ AS
+  t_show CHAR(30);
+ BEGIN
+  t_show := 'From procedure: ';
+  SELECT FirstName INTO var2 FROM Patient WHERE PatientID = var1;
+  var3 := var1 + 1; 
+  DBMS_OUTPUT.PUT_LINE(t_show || var2 || ' has ID ' || var1 || '. Updated ID: ' || var3);
+ END;
+ /
+SET SERVEROUTPUT ON;
+
+DECLARE 
+  patient_id Patient.PatientID%TYPE := 1; -- Assuming patient ID 1 exists in the table
+  patient_name Patient.FirstName%TYPE;
+  extra NUMBER;
+ BEGIN
+  proc2(patient_id, patient_name, extra);
+ END;
+ /
+**function example
+ CREATE OR REPLACE FUNCTION fun(var1 IN VARCHAR2) RETURN VARCHAR2 AS
+  value TestResult.TestName%TYPE;
+ BEGIN
+  SELECT TestName INTO value FROM TestResult WHERE TestResultID = var1;
+  RETURN value;
+ END;
+ /
+  SET SERVEROUTPUT ON;
+
+ DECLARE 
+  value VARCHAR2(20);
+ BEGIN
+  value := fun('5');
+  DBMS_OUTPUT.PUT_LINE('TestName: ' || value);
+ END;
+ /(no data found)
+**trigger example
+CREATE OR REPLACE TRIGGER meditation_delete_trigger
+BEFORE DELETE ON Meditation
+REFERENCING OLD AS o NEW AS n
+FOR EACH ROW
+BEGIN
+    -- Perform actions before deleting the row from Meditation table
+    -- For example, you can write your DELETE statements here
+    -- For this example, let's assume we're just printing a message
+    
+    DBMS_OUTPUT.PUT_LINE('Deleting row with MeditationID: ' || :o.MeditationID);
+END;
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
